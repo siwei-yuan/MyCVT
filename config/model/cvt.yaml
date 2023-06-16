@@ -12,11 +12,21 @@ encoder:
   scale: 1.0
   middle: [2, 2]
 
-  backbone:
-    _target_: cross_view_transformer.model.backbones.efficientnet.EfficientNetExtractor
+  # backbone:
+  #   _target_: cross_view_transformer.model.backbones.efficientnet.EfficientNetExtractor
 
-    model_name: efficientnet-b4
-    layer_names: ['reduction_2', 'reduction_4']
+  #   model_name: efficientnet-b4
+  #   layer_names: ['reduction_2', 'reduction_4']
+  #   image_height: ${data.image.h}
+  #   image_width: ${data.image.w}
+
+  backbone:
+    _target_: cross_view_transformer.model.backbones.resnet50.ResNetExtractor
+    # model_name: resnet18
+    # layer_names: ['reduction_2', 'reduction_4']
+    freeze: False
+    use_our_ckpt: True
+    ckpt_path: '/home/jerryyuan/cross_view_transformers/checkpoints/mocov2_imagenet_r50_epoch_100.pth'
     image_height: ${data.image.h}
     image_width: ${data.image.w}
 
