@@ -33,8 +33,13 @@ class ResNetExtractor(nn.Module):
             pretrained=pretrained)
 
         if use_our_ckpt:
-            checkpoint = torch.load(ckpt_path)
-            backbone.load_state_dict(checkpoint['state_dict'], strict=False)
+            ck = torch.load(ckpt_path, map_location=torch.device('cpu'))
+            output_dict = dict(state_dict=dict())
+            for key, value in ck['state_dict'].items():
+                if key.startswith('backbone'):
+                    output_dict['state_dict'][key[9:]] = value
+            
+            backbone.load_state_dict(output_dict['state_dict'], strict=False)
         
 
         self.return_interm_layers = return_interm_layers
