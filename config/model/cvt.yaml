@@ -26,7 +26,7 @@ encoder:
     # layer_names: ['reduction_2', 'reduction_4']
     freeze: False
     use_our_ckpt: True
-    ckpt_path: '/home/jerryyuan/cross_view_transformers/checkpoints/mocov2_imagenet_r50_epoch_100.pth'
+    ckpt_path: '/home/jerryyuan/MyCVT/cross_view_transformer/checkpoints/mocov2_imagenet_r50_epoch_100.pth'
     image_height: ${data.image.h}
     image_width: ${data.image.w}
 

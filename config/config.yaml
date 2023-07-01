@@ -9,8 +9,9 @@ defaults:
   - metrics: default_metrics
 
 experiment:
-  project: cross_view_transformers_test               # wandb project
-  uuid: ${now:%m%d_%H%M%S}                            # model name
+  project: CVT_backbones              # wandb project
+  #uuid: ResNet50_Layers_3_4_Skip_Maxpool              # model name
+  uuid: mocov2_imagenet_3_4 
   save_dir: ${hydra:runtime.cwd}/logs/                # log directory, will be created
 
   seed: 2022

@@ -23,7 +23,7 @@ class ResNetExtractor(nn.Module):
         dilation: bool = False, 
         pretrained: bool = True,
         freeze: bool = False,
-        return_stages: int = 3
+        return_stages: int = 5
     ):
         super().__init__()
         assert model_name in ['resnet18', 'resnet34', 'resnet50', 'resnet101', 'resnet152']
@@ -33,6 +33,7 @@ class ResNetExtractor(nn.Module):
             pretrained=pretrained)
 
         if use_our_ckpt:
+            print('\n=================================================\n USING OUR CHECKPOINTS\n=================================================\n')
             ck = torch.load(ckpt_path, map_location=torch.device('cpu'))
             output_dict = dict(state_dict=dict())
             for key, value in ck['state_dict'].items():
@@ -40,6 +41,11 @@ class ResNetExtractor(nn.Module):
                     output_dict['state_dict'][key[9:]] = value
             
             backbone.load_state_dict(output_dict['state_dict'], strict=False)
+
+    
+        # for param_tensor in backbone.state_dict():
+        #     if 'layer1.1' in param_tensor:
+        #         print(param_tensor, "\t", backbone.state_dict()[param_tensor])
         
 
         self.return_interm_layers = return_interm_layers
@@ -86,7 +92,7 @@ class ResNetExtractor(nn.Module):
     def forward(self, x):
         output = self.body(x)
         # we only need the second and third stage for a 8x and 16x down scaling
-        return [output[1], output[2]]
+        return [output[3], output[4]]
 
 
 
@@ -97,12 +103,19 @@ if __name__ == '__main__':
         model_name='resnet50', 
         return_interm_layers=True, 
         dilation=False,
-        pretrained=False)
+        pretrained=True,
+        use_our_ckpt=True,
+        ckpt_path='/home/jerryyuan/MyCVT/cross_view_transformer/checkpoints/densecl_aco_r50_epoch_100.pth',
+        image_height=224,
+        image_width=224)
     print(model)
     model = model.cuda()
-    y = model(x)
-    for k, v in y.items():
-        print(k, v.shape)    
-    model2 = ResNetExtractor()
-    model2 = model2.cuda()
-    y2 = model2(x)
+
+    print(model(x)[1].shape)
+
+    # y = model(x)
+    # for k, v in y.items():
+    #     print(k, v.shape)    
+    # model2 = ResNetExtractor()
+    # model2 = model2.cuda()
+    # y2 = model2(x)
