@@ -15,6 +15,7 @@ class ResNetExtractor(nn.Module):
         self, 
         use_our_ckpt,
         ckpt_path,
+        skip_downsample,
         image_height,
         image_width,
         model_name: str = 'resnet50', 
@@ -42,6 +43,17 @@ class ResNetExtractor(nn.Module):
             
             backbone.load_state_dict(output_dict['state_dict'], strict=False)
 
+
+        if skip_downsample:
+
+            backbone.maxpool = nn.Identity()
+
+            # backbone.layer2[0].conv2.stride = (1,1)
+            # backbone.layer2[0].downsample[0].stride = (1,1)
+            print('\n=================================================\n SKIP DOWNSAMPLE\n=================================================\n')
+
+
+        # print(backbone)
     
         # for param_tensor in backbone.state_dict():
         #     if 'layer1.1' in param_tensor:
@@ -104,11 +116,12 @@ if __name__ == '__main__':
         return_interm_layers=True, 
         dilation=False,
         pretrained=True,
-        use_our_ckpt=True,
+        use_our_ckpt=False,
+        skip_layer2_downsample=True,
         ckpt_path='/home/jerryyuan/MyCVT/cross_view_transformer/checkpoints/densecl_aco_r50_epoch_100.pth',
         image_height=224,
         image_width=224)
-    print(model)
+    # print(model)
     model = model.cuda()
 
     print(model(x)[1].shape)

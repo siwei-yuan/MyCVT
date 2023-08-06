@@ -11,7 +11,7 @@ defaults:
 experiment:
   project: CVT_backbones              # wandb project
   #uuid: ResNet50_Layers_3_4_Skip_Maxpool              # model name
-  uuid: mocov2_imagenet_3_4 
+  uuid: Densecl_ImageNet_ResNet50_Layers_3_4_Skip_StemMaxpool 
   save_dir: ${hydra:runtime.cwd}/logs/                # log directory, will be created
 
   seed: 2022
